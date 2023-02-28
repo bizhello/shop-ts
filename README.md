@@ -1,1 +1,3 @@
-# shop-ts
+### `npm start`
+
+.env : API_URL=''

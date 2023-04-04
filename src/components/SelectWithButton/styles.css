@@ -22,10 +22,12 @@
 }
 .selectWithButton__select:focus{
     color: rgba(63, 81, 181, 1);
+    
     border-bottom: 3px solid rgba(63, 81, 181, 1);
 }
 
 .selectWithButton__select:focus + .search__label{
+    
     color: rgba(63, 81, 181, 1);
 }
 .selectWithButton__group-left {

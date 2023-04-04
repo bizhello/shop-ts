@@ -17,6 +17,15 @@ enum TextEnum {
   SORT_BY = 'Сортировать по',
 }
 
+enum TextPopupEnum {
+  LABEL_FILE = 'Выбрать картинку для товара',
+  LABEL_TITLE = 'Название товара',
+  LABEL_PRICE = 'Цена товара',
+  LABEL_COUNT = 'Кол-во товара',
+  SAVE = 'СОХРАНИТЬ',
+  CLOSE = 'ЗАКРЫТЬ',
+}
+
 enum MessagesEnum {
   EMAIL_IS_BUSY = 'Пользователь с таким email уже существует',
   DATA_IS_NOT_CORRECT = 'Неправильно указан логин и/или пароль',
@@ -38,4 +47,4 @@ enum PathEnum {
   SIGN_IN = '/shop-family/sign-in',
 }
 
-export { MessagesEnum, PathEnum, TextEnum };
+export { MessagesEnum, PathEnum, TextEnum, TextPopupEnum };

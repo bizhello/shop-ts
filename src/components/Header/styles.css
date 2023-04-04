@@ -65,6 +65,11 @@
 .header__item:first-child {
   margin-left: 0;
 }
+.popup__button_group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .item__button {
   width: 10em;
   padding: 0.5em;

@@ -1,15 +1,20 @@
-/* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
 import React, { FC } from 'react';
 
-import Button from '../../shared/Button';
-import Header from '..';
+import { TextEnum } from '../../../common/enums';
+import Header from '../index';
 
 const HeaderWithoutAuth: FC = () => {
   return (
     <Header>
-      <Button text={'SIGN IN'} handleClick={() => console.log('Click')}/>
-      <Button text={'SIGN UP'} handleClick={() => console.log('Click')}/>
+      <ul className='header__list'>
+        <li className='header__item'>
+          <button className='item__button'>{TextEnum.SIGN_IN}</button>
+        </li>
+        <li className='header__item'>
+          <button className='item__button'>{TextEnum.SIGN_UP}</button>
+        </li>
+      </ul>
     </Header>
   );
 };

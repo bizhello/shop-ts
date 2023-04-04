@@ -1,18 +1,20 @@
 /* eslint-disable prettier/prettier */
 import React, { FC } from 'react';
 
+import { TextEnum } from '../../common/enums';
+
 interface IProps {
   children: JSX.Element | JSX.Element[];
 }
 
 const Header: FC<IProps> = ({ children }) => {
   return (
-    <header>
-      <div>
-        <button>БУРГЕР</button>
-        <h3>Shop</h3>
+    <header className="header">
+      <div className="header__group header__group-menu-with-title">
+        <button className="header__menu" />
+        <h3 className='header__title'>{TextEnum.TITLE}</h3>
       </div>
-      <div>{children}</div>
+      <div className="header__group">{children}</div>
     </header>
   );
 };

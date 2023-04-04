@@ -1,9 +1,7 @@
-/* eslint-disable no-console */
-
 /* eslint-disable prettier/prettier */
 import React, { FC } from 'react';
 
-import Button from '../../shared/Button';
+import { TextEnum } from '../../../common/enums';
 import Header from '..';
 
 interface IProps {
@@ -13,10 +11,10 @@ interface IProps {
 const HeaderWithAuth: FC<IProps> = ({ userName }) => {
   return (
     <Header>
-      <p>
-        HELLO <span>{userName}</span>
+      <p className="header__text">
+        {TextEnum.WELCOME} <span style={{ fontSize: '1.2em', marginLeft: '18px', fontWeight: '700' }}>{userName}</span>
       </p>
-      <Button handleClick={() => console.log('Click')} text={'LOGOUT'} />
+      <button className="item__button" style={{ backgroundColor:'red', border:'none', width: '70px' }}>{TextEnum.EXIT}</button>
     </Header>
   );
 };

@@ -1,12 +1,13 @@
 /* eslint-disable prettier/prettier */
-const parseDateInString = (date: Date): string => {
-  const month = date.getMonth() + 1;
-  let textMonth = '';
-  if (month < 10) {
-    textMonth = `0${month}`;
+const parseDateInString = (arg: Date | null | undefined): string => {
+  if (!arg) {
+    return ''
   }
+  const date = new Date(arg);
+  const textMonth = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+  const texDay = date.getDate() > 10 ? date.getDate() : `0${date.getDate()}`;
 
-  return `${date.getFullYear()}-${textMonth}`;
+  return `${date.getFullYear()}-${textMonth}-${texDay}`;
 };
 
 export default parseDateInString;

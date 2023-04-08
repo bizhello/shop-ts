@@ -5,10 +5,10 @@ import { TextEnum } from '../../common/enums';
 
 interface IProps {
   children?: JSX.Element | JSX.Element[];
-  toggelePopup: () => void;
+  togglePopup: () => void;
 }
 
-const SelectWithButton: FC<IProps> = ({ toggelePopup }) => {
+const SelectWithButton: FC<IProps> = ({ togglePopup }) => {
   return (
     <section className="selectWithButton">
       <div className='selectWithButton__group selectWithButton__group-left'>
@@ -22,7 +22,7 @@ const SelectWithButton: FC<IProps> = ({ toggelePopup }) => {
       </div>
       <div className='selectWithButton__group selectWithButton__group-right'>
         <p className="selectInput__text">{TextEnum.ADD_PRODUCT}</p>
-        <button className="selectWithButton__button" onClick={toggelePopup}></button>
+        <button className="selectWithButton__button" onClick={togglePopup}></button>
       </div>
     </section>
   );

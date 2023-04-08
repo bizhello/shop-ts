@@ -4,16 +4,16 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { TextPopupEnum } from '../../common/enums';
 import { ICard, IChangeCard } from '../../common/interfaces/ICard'
-import { getDate } from '../../utils';
+import { getDate, parseDateInString } from '../../utils';
 
 interface IProps {
   children?: JSX.Element | JSX.Element[];
-  toggelePopup: () => void;
+  togglePopup: () => void;
   changeValuePopup: (value: IChangeCard) => void;
   valuePopup: IChangeCard;
 }
 
-const Popup: FC<IProps> = ({ toggelePopup, changeValuePopup, valuePopup }) => {
+const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup }) => {
 
   const {
     id,
@@ -53,14 +53,14 @@ const Popup: FC<IProps> = ({ toggelePopup, changeValuePopup, valuePopup }) => {
   }
 
   const closePopup = () => {
-    toggelePopup();
+    togglePopup();
     changeValuePopup({
       id: null,
       url: '',
       title: '',
       price: null,
-      dateFrom: '',
-      dateTo: '',
+      dateFrom: null,
+      dateTo: null,
       count: null,
     })
   }
@@ -138,11 +138,11 @@ const Popup: FC<IProps> = ({ toggelePopup, changeValuePopup, valuePopup }) => {
           <p className='date__text'>Дата срока годности</p>
           <div className='date__group'>
             <div className='date__reverse'>
-              <input min={`${todayDate.getFullYear() - 1}-${todayMonth}-${todayDay}`} max={`${todayDate.getFullYear()}-${todayMonth}-${todayDay}`} value={dateFrom} onChange={(e) => changeValuePopup({ dateFrom: e.target.value })} type='date' className='date__input' />
+              <input min={`${todayDate.getFullYear() - 1}-${todayMonth}-${todayDay}`} max={`${todayDate.getFullYear()}-${todayMonth}-${todayDay}`} value={parseDateInString(dateFrom)} onChange={(e) => changeValuePopup({ dateFrom: new Date(e.target.value) })} type='date' className='date__input' />
               <p className='date__text'>От</p>
             </div>
             <div className='date__reverse'>
-              <input min={`${todayDate.getFullYear() - 1}-${todayMonth}-${todayDay}`} max={`${todayDate.getFullYear() + 3}-${todayMonth}-${todayDay}`} value={dateTo} onChange={(e) => changeValuePopup({ dateTo: e.target.value })} type='date' className='date__input' />
+              <input min={`${todayDate.getFullYear() - 1}-${todayMonth}-${todayDay}`} max={`${todayDate.getFullYear() + 3}-${todayMonth}-${todayDay}`} value={parseDateInString(dateTo)} onChange={(e) => changeValuePopup({ dateTo: new Date(e.target.value) })} type='date' className='date__input' />
               <p className='date__text'>До</p>
             </div>
           </div>

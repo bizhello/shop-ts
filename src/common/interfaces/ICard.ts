@@ -3,8 +3,8 @@ interface ICard {
   readonly url: string;
   readonly title: string;
   readonly price: number;
-  readonly dateFrom: string;
-  readonly dateTo: string;
+  readonly dateFrom: Date;
+  readonly dateTo: Date;
   readonly count: number;
 }
 
@@ -13,8 +13,8 @@ interface IChangeCard {
   url?: string;
   title?: string;
   price?: number | null;
-  dateFrom?: string;
-  dateTo?: string;
+  dateFrom?: Date | null;
+  dateTo?: Date | null;
   count?: number | null;
 }
 

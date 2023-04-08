@@ -5,16 +5,16 @@ import React, { FC } from 'react';
 
 import { TextEnum } from '../../common/enums';
 import { ICard, IChangeCard } from '../../common/interfaces/ICard';
-import { dateReverse } from '../../utils';
+import { dateReverse, parseDateInString } from '../../utils';
 
 interface IProps {
   children?: JSX.Element | JSX.Element[];
-  toggelePopup: () => void;
+  togglePopup: () => void;
   changeValuePopup: (value: IChangeCard) => void;
   card: ICard;
 }
 
-const Card: FC<IProps> = ({ toggelePopup, changeValuePopup, card }) => {
+const Card: FC<IProps> = ({ togglePopup, changeValuePopup, card }) => {
 
   const {
     id,
@@ -29,14 +29,14 @@ const Card: FC<IProps> = ({ toggelePopup, changeValuePopup, card }) => {
     changeValuePopup({
       ...card
     })
-    toggelePopup()
+    togglePopup()
   };
 
   return (
     <article className="card">
       <img
         className="card__image"
-        src={url}
+        src={`http://localhost:5555/static/images/${id}/image.webp`}
         alt="Фотография товара"
         width="104px"
         height="142px"
@@ -51,7 +51,7 @@ const Card: FC<IProps> = ({ toggelePopup, changeValuePopup, card }) => {
       </div>
       <div className="card__group">
         <h4 className="card__description">{TextEnum.EXPIRATION_DATE}</h4>
-        <p className="card__value">{dateReverse(dateFrom)}-{dateReverse(dateTo)}</p>
+        <p className="card__value">{dateReverse(parseDateInString(dateFrom))} - {dateReverse(parseDateInString(dateTo))}</p>
       </div>
       <div className="card__group">
         <h4 className="card__description">{TextEnum.COUNT}</h4>

@@ -46,6 +46,14 @@ const App: FC = () => {
     }
   }, [])
 
+  const incrementCard = useCallback(async (idCard: number): Promise<void> => {
+    try {
+      await CardService.cardIncrement(idCard);
+    } catch (e) {
+      toast("Не удалось увеличить кол-во товара!");
+    }
+  }, [])
+
   const changeValuePopup = (value: IChangeCard) => {
     setValuePopup({ ...valuePopup, ...value })
   }

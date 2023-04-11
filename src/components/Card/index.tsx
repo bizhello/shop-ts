@@ -12,20 +12,22 @@ interface IProps {
   togglePopup: () => void;
   changeValuePopup: (value: IChangeCard) => void;
   card: ICard;
+  decrementCard: (idCard: string) => Promise<void>;
+  incrementCard: (idCard: string) => Promise<void>;
+  removeCard: (idCard: string) => Promise<void>;
 }
 
-const Card: FC<IProps> = ({ togglePopup, changeValuePopup, card }) => {
+const Card: FC<IProps> = ({ togglePopup, changeValuePopup, card, incrementCard, decrementCard, removeCard }) => {
 
   const {
     id,
-    url,
     title,
     price,
     dateFrom,
     dateTo,
     count } = card
 
-  const changeCard = () => {
+  const OnChangeCard = () => {
     changeValuePopup({
       ...card
     })
@@ -47,7 +49,7 @@ const Card: FC<IProps> = ({ togglePopup, changeValuePopup, card }) => {
       </div>
       <div className="card__group">
         <h4 className="card__description">{TextEnum.PRICE}</h4>
-        <p className="card__value">{price}р</p>
+        <p className="card__value">{price} руб</p>
       </div>
       <div className="card__group">
         <h4 className="card__description">{TextEnum.EXPIRATION_DATE}</h4>
@@ -55,18 +57,18 @@ const Card: FC<IProps> = ({ togglePopup, changeValuePopup, card }) => {
       </div>
       <div className="card__group">
         <h4 className="card__description">{TextEnum.COUNT}</h4>
-        <p className="card__value">{count}шт</p>
+        <p className="card__value">{count} шт</p>
       </div>
       <div className="card__group">
-        <button className="card__control card__control-plus" />
-        <button className="card__control card__control-minus" />
+        <button className="card__control card__control-plus" onClick={() => incrementCard(id)} />
+        <button className="card__control card__control-minus" onClick={() => decrementCard(id)} />
       </div>
       <div className="card__group">
         <button
           className="card__control card__control-change"
-          onClick={() => changeCard()}
+          onClick={() => OnChangeCard()}
         />
-        <button className="card__control card__control-delete" />
+        <button className="card__control card__control-delete" onClick={() => removeCard(id)} />
       </div>
     </article>
   );

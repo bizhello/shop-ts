@@ -1,6 +1,5 @@
 interface ICard {
-  readonly id: number;
-  readonly url: string;
+  readonly id: string;
   readonly title: string;
   readonly price: number;
   readonly dateFrom: Date;
@@ -9,8 +8,7 @@ interface ICard {
 }
 
 interface IChangeCard {
-  id?: number | null;
-  url?: string;
+  id?: string;
   title?: string;
   price?: number | null;
   dateFrom?: Date | null;

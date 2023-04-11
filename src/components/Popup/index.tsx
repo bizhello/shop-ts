@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prettier/prettier */
+/* eslint-disable */
 import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { TextPopupEnum } from '../../common/enums';
@@ -10,20 +9,22 @@ interface IProps {
   children?: JSX.Element | JSX.Element[];
   togglePopup: () => void;
   changeValuePopup: (value: IChangeCard) => void;
+  changeCard: (card: ICard) => Promise<void>;
+  uploadImage: (idCard: string, body: FormData) => Promise<void>
   valuePopup: IChangeCard;
 }
 
-const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup }) => {
-
+const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCard, uploadImage }) => {
   const {
     id,
-    url,
     title,
     price,
     dateFrom,
     dateTo,
     count } = valuePopup
-  const [preview, setPreview] = useState<string | undefined>(url)
+
+  const url = id ? `http://localhost:5555/static/images/${id}/image.webp` : `https://cdn-icons-png.flaticon.com/512/3875/3875172.png`;
+  const [preview, setPreview] = useState<string>(url)
   const [file, setFile] = useState<File | null>(null)
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
@@ -44,19 +45,21 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup }) => {
     }
   };
 
-  const saveCard = () => {
-    if (id) {
-      // dispatch saveNewVersionCard
+  const saveCard = async () => {
+    if (file && id) {
+      const formData = new FormData();
+      formData.append("image", file, "image.png");
+      await uploadImage(id, formData)
     }
-
-    // dispatch createCard
+    if (id) {
+      await changeCard(valuePopup as ICard)
+    }
   }
 
   const closePopup = () => {
     togglePopup();
     changeValuePopup({
-      id: null,
-      url: '',
+      id: '',
       title: '',
       price: null,
       dateFrom: null,
@@ -77,7 +80,7 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup }) => {
     <article className="popup" onClick={(e) => e.target === e.currentTarget && closePopup()}>
       <form className="popup__form">
         <div className="popup_group">
-          <label htmlFor="popup__file" >{TextPopupEnum.LABEL_FILE}</label>
+          <label htmlFor="popup__file" style={{ color: '#878787' }}>{TextPopupEnum.LABEL_FILE}</label>
           <div className='file__group'>
             <div>
               <button style={{ display: "block", width: "120px", height: "30px" }} onClick={() => handleClickButtonFile()} type='button'>Выбрать картинку</button>
@@ -91,7 +94,7 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup }) => {
                 onChange={(e) => onChangeFileInput(e)}
               />
             </div>
-            <img src={preview || 'https://cdn-icons-png.flaticon.com/512/3875/3875172.png'} width='80px' height='110px' alt="No photo" />
+            <img src={preview} width='120px' height='120px' alt="No photo" className='popup__image' />
           </div>
         </div>
         <div className="popup_group">

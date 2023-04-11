@@ -15,6 +15,14 @@
   justify-content: space-evenly;
 }
 
+.card__image {
+  width:104px;
+  height:142px;
+  image-rendering: pixelated;
+  object-fit:cover;
+  object-position: center;
+}
+
 .card__control {
   border: none;
   width: 34px;

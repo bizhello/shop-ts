@@ -1,20 +1,19 @@
-/* eslint-disable */
 import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { TextPopupEnum } from '../../common/enums';
-import { ICard, IChangeCard } from '../../common/interfaces/ICard'
+import { ICard, ICardDto, IChangeCard } from '../../common/interfaces/ICard';
 import { getDate, parseDateInString } from '../../utils';
 
 interface IProps {
-  children?: JSX.Element | JSX.Element[];
+  valuePopup: IChangeCard;
   togglePopup: () => void;
   changeValuePopup: (value: IChangeCard) => void;
   changeCard: (card: ICard) => Promise<void>;
-  uploadImage: (idCard: string, body: FormData) => Promise<void>
-  valuePopup: IChangeCard;
+  createCard: (cardDto: ICardDto) => Promise<ICard | null>;
+  uploadImage: (idCard: string, body: FormData) => Promise<void>;
 }
 
-const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCard, uploadImage }) => {
+const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCard, createCard, uploadImage }) => {
   const {
     id,
     title,
@@ -23,7 +22,7 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCa
     dateTo,
     count } = valuePopup
 
-  const url = id ? `http://localhost:5555/static/images/${id}/image.webp` : `https://cdn-icons-png.flaticon.com/512/3875/3875172.png`;
+  const url = id ? `http://localhost:5555/static/images/${id}/image.webp` : `defaultImageCard.png`;
   const [preview, setPreview] = useState<string>(url)
   const [file, setFile] = useState<File | null>(null)
   const hiddenFileInput = useRef<HTMLInputElement>(null);
@@ -45,17 +44,6 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCa
     }
   };
 
-  const saveCard = async () => {
-    if (file && id) {
-      const formData = new FormData();
-      formData.append("image", file, "image.png");
-      await uploadImage(id, formData)
-    }
-    if (id) {
-      await changeCard(valuePopup as ICard)
-    }
-  }
-
   const closePopup = () => {
     togglePopup();
     changeValuePopup({
@@ -68,6 +56,24 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCa
     })
   }
 
+  const onClickSave = async () => {
+    const formData = new FormData();
+    if (id) {
+      await changeCard(valuePopup as ICard);
+      if (file) {
+        formData.append("image", file, "image.jpg");
+        await uploadImage(id, formData)
+      }
+    } else {
+      const newCard = await createCard(valuePopup as ICardDto);
+      if (newCard && file) {
+        formData.append("image", file, "image.jpg");
+        await uploadImage(newCard.id, formData)
+      }
+    }
+
+    closePopup();
+  }
   useEffect(() => {
     if (file) {
       const objectUrl = URL.createObjectURL(file)
@@ -83,7 +89,7 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCa
           <label htmlFor="popup__file" style={{ color: '#878787' }}>{TextPopupEnum.LABEL_FILE}</label>
           <div className='file__group'>
             <div>
-              <button style={{ display: "block", width: "120px", height: "30px" }} onClick={() => handleClickButtonFile()} type='button'>Выбрать картинку</button>
+              <button style={{ display: "block", width: "120px" }} onClick={() => handleClickButtonFile()} type='button'>Выбрать картинку</button>
               <input
                 ref={hiddenFileInput}
                 style={{ display: 'none' }}
@@ -171,7 +177,7 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCa
           </label>
         </div>
         <div className='popup__button_group'>
-          <button className="popup__button popup__button-save" type='button' onClick={() => saveCard()}>
+          <button className="popup__button popup__button-save" type='button' onClick={() => onClickSave()}>
             {TextPopupEnum.SAVE}
           </button>
           <button className="popup__button popup__button-close" type='button' onClick={closePopup}>

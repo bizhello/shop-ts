@@ -17,6 +17,13 @@ enum TextEnum {
   SORT_BY = 'Сортировать по',
 }
 
+
+enum SortEnum {
+  dataCreatedAt = 'По дате создания',
+  dataEnd = 'По дате окончания срока годностии',
+  dataStart = 'По дате изготовления',
+}
+
 enum TextPopupEnum {
   LABEL_FILE = 'Выбрать картинку для товара',
   LABEL_TITLE = 'Название товара',
@@ -47,4 +54,4 @@ enum PathEnum {
   SIGN_IN = '/shop-family/sign-in',
 }
 
-export { MessagesEnum, PathEnum, TextEnum, TextPopupEnum };
+export { MessagesEnum, PathEnum, TextEnum, TextPopupEnum, SortEnum };

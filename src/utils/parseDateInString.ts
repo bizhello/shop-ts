@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 const parseDateInString = (arg: Date | null | undefined): string => {
   if (!arg) {
     return ''

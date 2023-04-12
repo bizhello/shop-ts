@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prettier/prettier */
-// eslint-disable-next-line prettier/prettier
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 
 import { TextEnum } from '../../common/enums';
 import { ICard, IChangeCard } from '../../common/interfaces/ICard';

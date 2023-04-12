@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { FC } from 'react';
 
 import { TextEnum } from '../../common/enums';

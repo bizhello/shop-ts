@@ -1,10 +1,13 @@
-interface ICard {
-  readonly id: string;
+interface ICardDto {
   readonly title: string;
   readonly price: number;
   readonly dateFrom: Date;
   readonly dateTo: Date;
   readonly count: number;
+}
+
+interface ICard extends ICardDto {
+  readonly id: string;
 }
 
 interface IChangeCard {
@@ -16,4 +19,4 @@ interface IChangeCard {
   count?: number | null;
 }
 
-export type { ICard, IChangeCard };
+export type { ICard, IChangeCard, ICardDto };

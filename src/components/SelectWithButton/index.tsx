@@ -1,18 +1,18 @@
-/* eslint-disable prettier/prettier */
 import React, { FC } from 'react';
 
-import { TextEnum } from '../../common/enums';
+import { TextEnum, SortEnum } from '../../common/enums';
 
 interface IProps {
-  children?: JSX.Element | JSX.Element[];
+  sortedCards: SortEnum
+  changeSortedCards: (value: SortEnum) => void;
   togglePopup: () => void;
 }
 
-const SelectWithButton: FC<IProps> = ({ togglePopup }) => {
+const SelectWithButton: FC<IProps> = ({ togglePopup, sortedCards, changeSortedCards }) => {
   return (
     <section className="selectWithButton">
       <div className='selectWithButton__group selectWithButton__group-left'>
-        <select id='selectWithButton__select' className='selectWithButton__select' name='selectWithButton__select' defaultValue={TextEnum.DATE_END}>
+        <select id='selectWithButton__select' className='selectWithButton__select' name='selectWithButton__select' value={sortedCards} onChange={(e) => changeSortedCards(e.target.value as SortEnum)}>
           <option disabled >{TextEnum.CHOOSE_SORT}</option>
           <option value={TextEnum.DATE_CREATED}>{TextEnum.DATE_CREATED}</option>
           <option value={TextEnum.DATE_END}>{TextEnum.DATE_END}</option>

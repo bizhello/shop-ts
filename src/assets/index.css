@@ -1,4 +1,6 @@
 @import url(./App.css);
+@import url(./Error.css);
+@import url(./Auth.css);
 @import url(../components/Header/styles.css);
 @import url(../components/SearchInput/style.css);
 @import url(../components/SelectWithButton/styles.css);

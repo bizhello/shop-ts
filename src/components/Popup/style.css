@@ -25,7 +25,7 @@
 }
 .popup__image {
   image-rendering: pixelated;
-  object-fit:cover;
+  object-fit: contain;
   object-position: center;
 }
 .popup_group {
@@ -54,6 +54,8 @@
   color: #878787;
 }
 .popup__input {
+  background-image: none;
+  background:none;
   padding-bottom: 0.3em;
   width: 50%;
   font-size: 1em;

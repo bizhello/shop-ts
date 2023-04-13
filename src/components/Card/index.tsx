@@ -15,7 +15,6 @@ interface IProps {
 }
 
 const Card: FC<IProps> = ({ togglePopup, changeValuePopup, card, incrementCard, decrementCard, removeCard }) => {
-
   const {
     id,
     title,

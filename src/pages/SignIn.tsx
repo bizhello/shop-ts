@@ -1,26 +1,29 @@
-import React, { FC, useState } from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import useInput from "../hooks/useInput";
 
 const SignIn = () => {
-
-  const [value, setValue] = useState<{ login: string, password: string }>({ login: '', password: '' })
+  const loginInput = useInput('', { isEmpty: true, isEmail: true });
+  const passwordInput = useInput('', { isEmpty: true, minLength: 4, maxLength: 30 });
   const [isClosePassword, setIsClosePassword] = useState<boolean>(true);
 
   return (
     <>
-      <header className="auth__header">
-        <h2 style={{ mixBlendMode: 'screen' }}>SHOP FAMILY</h2>
+      <header className="header auth__header">
+        <h2 className='header__title'>SHOP FAMILY</h2>
       </header>
       <div className="auth">
-        <form className="auth__form" autoComplete="off">
+        <form className="auth__form" autoComplete="false">
           <h3 className='auth__title'>Вход в систему</h3>
           <div className="auth__group">
-            <input type='text' id='login__email' className="auth__input auth__email " autoComplete='off' value={value.login} onChange={(e) => setValue({ ...value, login: e.target.value })} />
-            <label htmlFor='login__email' className={value.login ? 'auth__label auth__label-filled' : "auth__label auth__label-empty"}>E-mail</label>
+            <input type='email' name='email' id='login__email' className="auth__input auth__email " autoComplete='off' value={loginInput.value} onBlur={loginInput.onBlur} onChange={(e) => loginInput.onChange(e)} />
+            <label htmlFor='login__email' className={loginInput.value ? 'auth__label auth__label-filled' : "auth__label auth__label-empty"}>E-mail</label>
+            {loginInput.isDirty && loginInput.errorArray.length > 0 && <span className="auth__error">{loginInput.errorArray[0]}</span>}
           </div>
           <div className="auth__group">
-            <input type={isClosePassword ? 'password' : 'text'} id='login__password' className="auth__input auth__password" autoComplete="new-password" value={value.password} onChange={(e) => setValue({ ...value, password: e.target.value })} />
-            <label htmlFor='login__password' className={value.password ? 'auth__label auth__label-filled' : "auth__label auth__label-empty"} >Пароль</label>
+            <input name='password' type={isClosePassword ? 'password' : 'text'} id='login__password' className="auth__input auth__password" autoComplete="current-password webauthn" value={passwordInput.value} onBlur={passwordInput.onBlur} onChange={(e) => passwordInput.onChange(e)} />
+            <label htmlFor='login__password' className={passwordInput.value ? 'auth__label auth__label-filled' : "auth__label auth__label-empty"} >Пароль</label>
+            {passwordInput.isDirty && passwordInput.errorArray.length > 0 && <span className="auth__error">{passwordInput.errorArray[0]}</span>}
           </div>
           <div className="auth__options">
             <div className="options__group" >
@@ -33,7 +36,7 @@ const SignIn = () => {
             </div>
           </div>
           <button className="auth__button">Войди</button>
-          <NavLink className="option__forgot" to="#">Востановить пароль?</NavLink>
+          <NavLink className="option__forgot" to="../signUp">У меня еще нет акаунта</NavLink>
         </form>
       </div>
     </>

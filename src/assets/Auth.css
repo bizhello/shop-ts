@@ -1,11 +1,5 @@
 .auth__header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 64px;
-  color: #fff;
-  background-color: #3f51b5;
+ 
 }
 .auth {
   position: fixed;
@@ -20,7 +14,7 @@
 }
 .auth__form {
   width: 30%;
-  background-color: rgba(63, 81, 181, 0.3);
+  background-color: rgba(63, 81, 181, 0.2);
   padding: 5%;
   border: 2px solid #3f51b5;
   border-radius: 2%;
@@ -37,19 +31,24 @@
   position: relative;
   display: flex;
 }
+.auth__error {
+  position: absolute;
+  font-size: small;
+  top: 1.6rem;
+  color: red;
+}
 .auth__input {
   padding: 1%;
-  background-image: none;
-  background:none;
-  background-color: none;
   width: 80%;
   height: 3vh;
   font-size: 15px;
-  color: black;
+  color: #878787;
+  outline-offset: 0;
   appearance: none;
-  outline:none;
+  outline: none;
   border: none;
   border-bottom: 3px solid #878787;
+  background:none;
 
   transition: border-bottom 0.2s ease-in-out, width 0.2s ease-in-out;
 }
@@ -58,7 +57,7 @@
   color: #878787;
   font-size:small;
   position: absolute;
-  bottom: 1.2rem;
+  bottom: 0.5rem;
   left: 0.2rem;
 
   transition: top 0.16s ease-in-out, font-size 0.16s ease-in-out, color 0.16s ease-in-out;
@@ -67,15 +66,17 @@
   font-size: 15px;
 }
 .auth__label-filled {
-  bottom: 2rem;
+  bottom: 1.7rem;
 }
 
 .auth__input:focus {
+  color: black;
   border-bottom: 3px solid #3f51b5;
   width: 100%;
+  outline: 0;
 }
 .auth__input:focus + .auth__label {
-  bottom: 2rem;
+  bottom: 1.7rem;
   color: #3f51b5;
   font-size: 15px;
 }
@@ -85,12 +86,13 @@
   position: relative;
 }
 .auth__checkbox {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
 }
 .auth__checkbox-label {
   position: absolute;
   left: 25px;
+  bottom: 1.6px;
 }
 .option__forgot {
   display: block;

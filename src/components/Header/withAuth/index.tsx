@@ -5,15 +5,16 @@ import Header from '..';
 
 interface IProps {
   userName: string;
+  logout: () => Promise<void>;
 }
 
-const HeaderWithAuth: FC<IProps> = ({ userName }) => {
+const HeaderWithAuth: FC<IProps> = ({ userName, logout }) => {
   return (
     <Header>
       <p className="header__text">
-        {TextEnum.WELCOME} <span style={{ fontSize: '1.2em', marginLeft: '18px', fontWeight: '700' }}>{userName}</span>
+        {TextEnum.WELCOME} <span style={{ fontSize: '1.2em', marginLeft: '18px', fontWeight: '700' }}>{userName || localStorage.getItem('user-firstName')}</span>
       </p>
-      <button className="item__button" style={{ backgroundColor:'red', border:'none', width: '70px' }}>{TextEnum.EXIT}</button>
+      <button className="item__button" style={{ backgroundColor: 'red', border: 'none', width: '70px' }} onClick={() => logout()}>{TextEnum.EXIT}</button>
     </Header>
   );
 };

@@ -1,7 +1,8 @@
 import '../assets/App.css';
 import 'react-toastify/dist/ReactToastify.css';
 
-import React, { FC, useCallback, useEffect, useState, useMemo } from 'react';
+import React, { FC, useCallback, useEffect, useState, useMemo, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import { SortEnum } from '../common/enums'
 import { ICard, ICardDto, IChangeCard } from '../common/interfaces/ICard';
@@ -13,14 +14,19 @@ import SearchInput from '../components/SearchInput';
 import SelectWithButton from '../components/SelectWithButton';
 import CardService from '../services/CardService';
 import ImageService from '../services/ImageService';
+import CurrentUserContext from '../contexts/CurrentUserContext';
+import AuthService from '../services/AuthService';
+import usePopup from '../hooks/usePopup';
 
 const Main: FC = () => {
 
-  const [isLoad, setIsLoad] = useState<boolean>(false);
-  const [isAuth, setIsAuth] = useState<boolean>(true);
-  const [user, setUser] = useState({ name: 'Andrey' });
+  const navigate = useNavigate();
+
+  const [isAuth, setIsAuth] = useState(true);
+  const currentUser = useContext(CurrentUserContext);
+  const [isLoad, setIsLoad] = useState<boolean>(true);
   const [cards, setCards] = useState<ICard[] | []>([]);
-  const [isPopupOpen, setPopupIsOpen] = useState<boolean>(false);
+  const { isOpenPopup, togglePopup } = usePopup();
   const [valuePopup, setValuePopup] = useState<IChangeCard>({
     id: '',
     title: '',
@@ -64,14 +70,11 @@ const Main: FC = () => {
     }
 
     return sortCards;
-  }, [searchValue, cards, sortCards]);
-
-  const togglePopup = (): void => {
-    setPopupIsOpen(prev => !prev)
-  }
+  }, [searchValue, sortCards]);
 
   const createCard = useCallback(async (cardDto: ICardDto): Promise<ICard | null> => {
     try {
+      await checkAuth()
       const newCard = await CardService.createCard(cardDto);
       setCards([...cards, newCard]);
       return newCard;
@@ -83,6 +86,7 @@ const Main: FC = () => {
 
   const uploadImage = useCallback(async (idCard: string, body: FormData): Promise<void> => {
     try {
+      await checkAuth()
       await ImageService.createImageCard(idCard, body);
     } catch {
       toast("Не удалось загрузить картинку товар!");
@@ -91,6 +95,7 @@ const Main: FC = () => {
 
   const changeCard = useCallback(async (card: ICard): Promise<void> => {
     try {
+      await checkAuth()
       await CardService.changeCard(card);
       const indexCard = cards.findIndex(
         (item) => item.id === card.id
@@ -98,14 +103,14 @@ const Main: FC = () => {
       const copyCards = cards.slice(0);
       copyCards[indexCard] = card;
       setCards(copyCards)
-    }
-    catch (e) {
+    } catch (e) {
       toast("Не удалось изменить товар!");
     }
   }, [cards])
 
   const decrementCard = useCallback(async (idCard: string): Promise<void> => {
     try {
+      await checkAuth()
       await CardService.decrementCard(idCard);
       const newCards = cards.map((card) => {
         let newCount = card.count;
@@ -124,6 +129,7 @@ const Main: FC = () => {
 
   const incrementCard = useCallback(async (idCard: string): Promise<void> => {
     try {
+      await checkAuth()
       await CardService.incrementCard(idCard);
       const newCards = cards.map((card) => {
         let newCount = card.count;
@@ -142,6 +148,7 @@ const Main: FC = () => {
 
   const removeCard = useCallback(async (idCard: string): Promise<void> => {
     try {
+      await checkAuth()
       Promise.all([CardService.removeCard(idCard), ImageService.removeCardImage(idCard)])
       setCards(cards.filter(card => card.id !== idCard))
     } catch {
@@ -155,37 +162,80 @@ const Main: FC = () => {
   }, [valuePopup])
 
   const fetchCards = useCallback(async (): Promise<void> => {
-    setIsLoad(true);
     try {
+      setIsLoad(true);
+      await checkAuth()
       const dataCards = await CardService.getCards();
       setCards(dataCards.map((item) => {
         return ({ ...item, dateFrom: new Date(item.dateFrom), dateTo: new Date(item.dateTo) })
       }))
     } catch (error) {
-      toast("Не удалось загрузить товар!");
+      isAuth && toast("Не удалось загрузить товар!");
     } finally {
       setIsLoad(false);
     }
   }, [])
+
+  const checkAuth = useCallback(async () => {
+    try {
+      const response = await AuthService.checkAuth();
+      localStorage.setItem('user-id', response.id);
+      setIsAuth(true);
+    } catch (error) {
+      setIsAuth(false);
+    }
+  }, [])
+
+  const logout = useCallback(async () => {
+    try {
+      await checkAuth();
+      await AuthService.logout();
+    } catch (error) {
+      toast('Не удалось выйти');
+    } finally {
+      localStorage.clear();
+      setIsAuth(false);
+    }
+  }, [])
+
+  console.log('RENDER ALL')
+
+  useEffect(() => {
+
+  }, [uploadImage])
+
+  useEffect(() => {
+    if (!isAuth) {
+      navigate('/login')
+    }
+  }, [isAuth])
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth])
 
   useEffect(() => {
     fetchCards();
   }, [fetchCards])
 
   return (
-    <div className="main">
-      {isAuth ? <HeaderWithAuth userName={user.name} /> : <HeaderWithoutAuth />}
-      <body className='Body'>
-        <SearchInput changeSearchValue={changeSearchValue} searchValue={searchValue} />
-        <SelectWithButton togglePopup={togglePopup} sortedCards={sortedCards} changeSortedCards={changeSortedCards} />
-        {!isLoad && searchCards && searchCards.map(card => (
-          <Card key={card.id} togglePopup={togglePopup} changeValuePopup={changeValuePopup} card={card} incrementCard={incrementCard} decrementCard={decrementCard} removeCard={removeCard} />
-        ))}
-        {!isLoad && searchCards?.length === 0 && <h2 style={{ margin: '2em' }}>Товар не найден</h2>}
-        {isPopupOpen && <Popup togglePopup={togglePopup} changeValuePopup={changeValuePopup} valuePopup={valuePopup} changeCard={changeCard} createCard={createCard} uploadImage={uploadImage} />}
-        <ToastContainer />
-      </body>
-    </div>
+    <>
+      {/* {isAuth && */}
+      <div className="main">
+        {isAuth ? <HeaderWithAuth logout={logout} userName={currentUser.firstName} /> : <HeaderWithoutAuth />}
+        <body className='Body'>
+          <SearchInput changeSearchValue={changeSearchValue} searchValue={searchValue} />
+          <SelectWithButton togglePopup={togglePopup} sortedCards={sortedCards} changeSortedCards={changeSortedCards} />
+          {!isLoad && searchCards && searchCards.map(card => (
+            <Card key={card.id} togglePopup={togglePopup} changeValuePopup={changeValuePopup} card={card} incrementCard={incrementCard} decrementCard={decrementCard} removeCard={removeCard} />
+          ))}
+          {!isLoad && searchCards?.length === 0 && <h2 style={{ margin: '2em' }}>Товар не найден</h2>}
+          {isOpenPopup && <Popup togglePopup={togglePopup} changeValuePopup={changeValuePopup} valuePopup={valuePopup} changeCard={changeCard} createCard={createCard} uploadImage={uploadImage} />}
+          <ToastContainer />
+        </body>
+      </div>
+      {/* } */}
+    </>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useEffect, useRef, useState } from 'react';
 
 import { TextPopupEnum } from '../../common/enums';
 import { ICard, ICardDto, IChangeCard } from '../../common/interfaces/ICard';
@@ -28,6 +28,8 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCa
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   const { todayDate, todayMonth, todayDay } = getDate();
+
+  const [IsFormValid, setIsFormValid] = useState<boolean>(false);
 
   const onChangeFileInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -74,6 +76,7 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCa
 
     closePopup();
   }
+
   useEffect(() => {
     if (file) {
       const objectUrl = URL.createObjectURL(file)
@@ -81,6 +84,24 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCa
     }
 
   }, [file])
+
+  useEffect(() => {
+    if (id) {
+      title &&
+        price &&
+        dateFrom &&
+        dateTo &&
+        count && setIsFormValid(true)
+    } else {
+      title &&
+        price &&
+        dateFrom &&
+        dateTo &&
+        file &&
+        count && setIsFormValid(true)
+    }
+
+  }, [title, price, dateFrom, dateTo, count, file])
 
   return (
     <article className="popup" onClick={(e) => e.target === e.currentTarget && closePopup()}>
@@ -176,11 +197,12 @@ const Popup: FC<IProps> = ({ togglePopup, changeValuePopup, valuePopup, changeCa
             {TextPopupEnum.LABEL_COUNT}
           </label>
         </div>
+        {!IsFormValid && <p><span style={{ color: "red" }}>Форма не валидна</span></p>}
         <div className='popup__button_group'>
-          <button className="popup__button popup__button-save" type='button' onClick={() => onClickSave()}>
+          <button disabled={!IsFormValid} className={!IsFormValid ? "popup__button popup__button-isNoValid" : "popup__button"} type='button' onClick={() => onClickSave()}>
             {TextPopupEnum.SAVE}
           </button>
-          <button className="popup__button popup__button-close" type='button' onClick={closePopup}>
+          <button className="popup__button" type='button' onClick={closePopup}>
             {TextPopupEnum.CLOSE}
           </button>
         </div>

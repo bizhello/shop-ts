@@ -1,18 +1,20 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
+import { ToastContainer } from 'react-toastify';
 
 interface IProps {
-  chilndren: JSX.Element
+  children: JSX.Element | JSX.Element[]
 }
 
-const Auth: FC<IProps> = ({ chilndren }) => {
+const Auth: FC<IProps> = ({ children }) => {
   return (
     <>
+      <ToastContainer />
       <header className="header auth__header">
         <h2 className='header__title'>SHOP FAMILY</h2>
       </header>
       <div className="auth">
-        <form className="auth__form" autoComplete="false">
-          {chilndren}
+        <form className="auth__form" autoComplete="off">
+          {children}
         </form>
       </div>
     </>

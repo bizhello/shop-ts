@@ -1,5 +1,4 @@
-import React, { FC } from "react";
-import ReactDOM from "react-dom/client";
+import React, { FC, useState } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -9,30 +8,43 @@ import Error from './pages/Error'
 import Main from "./pages/Main";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Main />,
-    errorElement: <Error />,
-  },
-  {
-    path: "/signUp",
-    element: <SignUp />,
-    errorElement: <Error />,
-  },
-  {
-    path: "/signIn",
-    element: <SignIn />,
-    errorElement: <Error />,
-  },
-]);
+import CurrentUserContext from "./contexts/CurrentUserContext";
+import { IUserInfo } from "./common/interfaces/IUser";
 
 const App: FC = () => {
+  const [userInfo, setUserInfo] = useState<IUserInfo>({
+    id: '',
+    firstName: '',
+  });
+
+  const changeUserInfo = (data: IUserInfo): void => {
+    setUserInfo(data)
+  }
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Main />,
+      errorElement: <Error />,
+    },
+    {
+      path: "/register",
+      element: <SignUp />,
+      errorElement: <Error />,
+    },
+    {
+      path: "/login",
+      element: <SignIn changeUserInfo={changeUserInfo} />,
+      errorElement: <Error />,
+    },
+  ]);
+
   return (
-    <div className="App">
-      <RouterProvider router={router} />
-    </div>
+    <CurrentUserContext.Provider value={userInfo}>
+      <div className="App">
+        <RouterProvider router={router} />
+      </div>
+    </CurrentUserContext.Provider>
   );
 };
 

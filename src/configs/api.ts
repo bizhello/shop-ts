@@ -1,6 +1,5 @@
-/* eslint-disable prettier/prettier */
 const api = {
-  baseUrl: 'https://example.com',
+  baseUrl: 'http://localhost:5555/',
 };
 
 export default api;

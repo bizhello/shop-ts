@@ -201,10 +201,6 @@ const Main: FC = () => {
   console.log('RENDER ALL')
 
   useEffect(() => {
-
-  }, [uploadImage])
-
-  useEffect(() => {
     if (!isAuth) {
       navigate('/login')
     }

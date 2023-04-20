@@ -20,6 +20,7 @@ import usePopup from '../hooks/usePopup';
 import AuthService from '../services/AuthService';
 import CardService from '../services/CardService';
 import ImageService from '../services/ImageService';
+import getPageCount from '../utils/pages';
 
 const mainLoader = async (): Promise<boolean> => {
   await AuthService.checkAuth();
@@ -34,10 +35,9 @@ const Main: FC = () => {
   const loadAuth = useLoaderData();
   const { isOpenPopup, togglePopup } = usePopup();
 
-  const [totalCountCards, setTotalCountCards] = useState<number>(0)
+  const [totalPages, setTotalPages] = useState<number>(0)
   const [limitCards, setLimitCards] = useState<number>(10)
   const [pageCards, setPagesCards] = useState<number>(1)
-
 
   const [isAuth, setIsAuth] = useState<boolean>(true);
   const [isLoad, setIsLoad] = useState<boolean>(true);
@@ -176,12 +176,17 @@ const Main: FC = () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         totalCardsNum = Number.parseInt(totalCardsStr, 10);
       }
-      setCards([...cards, ...newCards]);
-      setTotalCountCards(totalCardsNum)
+      setCards(newCards);
+      setTotalPages(getPageCount(totalCardsNum, limitCards))
     } catch (error) {
       toast("Не удалось загрузить товара!");
     }
   }, [])
+  useEffect(() => {
+    fetchCardsPagination()
+  }, [fetchCardsPagination])
+  // eslint-disable-next-line no-console
+  console.log('totalPages: ', totalPages)
 
   const fetchCards = useCallback(async (): Promise<void> => {
     try {

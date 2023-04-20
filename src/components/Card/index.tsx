@@ -33,7 +33,8 @@ const Card: FC<IProps> = ({
   };
 
   const isDateValid = useMemo(() => {
-    const difference = dateTo.getTime() - Date.now();
+
+    const difference = new Date(dateTo).getTime() - Date.now();
 
     return !(difference < 550383924);
   }, [dateTo]);

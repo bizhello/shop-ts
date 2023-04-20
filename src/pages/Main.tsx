@@ -212,14 +212,13 @@ const Main: FC = () => {
     }
   }, [])
 
-  useEffect(() => {
-    checkAuth()
-  }, [checkAuth])
+  // useEffect(() => {
+  //   checkAuth()
+  // }, [checkAuth])
 
   useEffect(() => {
-    // eslint-disable-next-line no-unused-expressions
-    loadAuth && fetchCards();
-  }, [fetchCards, loadAuth])
+    fetchCards();
+  }, [fetchCards])
 
   if (!loadAuth || !isAuth) {
     return <Navigate to="/login" replace />;

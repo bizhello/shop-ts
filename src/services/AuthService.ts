@@ -1,8 +1,9 @@
+/* eslint-disable prettier/prettier */
 import api from "../configs/api";
 import { ReqLoginDto, ReqRegistryDto, ResLoginDto, ResRegistryDto } from "./dto/auth.dto";
 
 export default class AuthService {
-  static async register(body: ReqRegistryDto): Promise<ResRegistryDto> {
+  public static async register(body: ReqRegistryDto): Promise<ResRegistryDto> {
     const response: Response = await fetch(`${api.baseUrl}registry`, {
       method: 'POST',
       headers: {
@@ -12,13 +13,13 @@ export default class AuthService {
     })
 
     if (!response.ok) {
-      return Promise.reject(await response.json());
+      return Promise.reject(response.json());
     }
 
-    return await response.json();
+    return response.json();
   }
 
-  static async login(body: ReqLoginDto): Promise<ResLoginDto> {
+  public static async login(body: ReqLoginDto): Promise<ResLoginDto> {
     const response: Response = await fetch(`${api.baseUrl}login`, {
       method: 'POST',
       credentials: "include",
@@ -32,10 +33,10 @@ export default class AuthService {
       return Promise.reject(await response.json());
     }
 
-    return await response.json();
+    return response.json();
   }
 
-  static async checkAuth(): Promise<{ id: string }> {
+  public static async checkAuth(): Promise<{ id: string }> {
     const response: Response = await fetch(`${api.baseUrl}users/info/me`, {
       method: 'GET',
       credentials: "include",
@@ -66,19 +67,21 @@ export default class AuthService {
         if (!newResponse.ok) {
           return Promise.reject(await newResponse.json());
         }
-        return await newResponse.json();
+
+        return newResponse.json();
       }
+
       return Promise.reject(await response.json());
     }
     if (!response.ok) {
       return Promise.reject(await response.json());
     }
 
-    return await response.json();
+    return response.json();
   }
 
 
-  static async logout(): Promise<{ message: string }> {
+  public static async logout(): Promise<{ message: string }> {
     const response: Response = await fetch(`${api.baseUrl}logout`, {
       method: 'GET',
       credentials: "include",
@@ -92,7 +95,7 @@ export default class AuthService {
       return Promise.reject(await response.json());
     }
 
-    return await response.json();
+    return response.json();
   }
 
 }

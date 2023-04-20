@@ -1,51 +1,41 @@
-import React, { FC, useState } from "react";
+/* eslint-disable prettier/prettier */
+import React, { FC } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
 
-import Error from './pages/Error'
-import Main from "./pages/Main";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import CurrentUserContext from "./contexts/CurrentUserContext";
-import { IUserInfo } from "./common/interfaces/IUser";
+import Error from "./pages/Error";
+import Login from "./pages/Login";
+import Main, { mainLoader } from "./pages/Main";
+import Register from "./pages/Register";
 
 const App: FC = () => {
-  const [userInfo, setUserInfo] = useState<IUserInfo>({
-    id: '',
-    firstName: '',
-  });
-
-  const changeUserInfo = (data: IUserInfo): void => {
-    setUserInfo(data)
-  }
 
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Main />,
       errorElement: <Error />,
+      loader: mainLoader 
     },
     {
       path: "/register",
-      element: <SignUp />,
+      element: <Register />,
       errorElement: <Error />,
     },
     {
       path: "/login",
-      element: <SignIn changeUserInfo={changeUserInfo} />,
+      element: <Login />,
       errorElement: <Error />,
     },
   ]);
 
   return (
-    <CurrentUserContext.Provider value={userInfo}>
-      <div className="App">
-        <RouterProvider router={router} />
-      </div>
-    </CurrentUserContext.Provider>
+    <div className="App">
+      <RouterProvider router={router} />
+    </div>
   );
-};
+}
 
 export default App;

@@ -1,20 +1,16 @@
-import React, { FC, useEffect, useState } from "react";
+/* eslint-disable prettier/prettier */
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import useInput from "../hooks/useInput";
-import Auth from "../components/Auth/Auth";
+import { toast } from "react-toastify";
+
 import { ILoginReq } from "../common/interfaces/IAuth";
-import AuthService from "../services/AuthService";
 import IError from "../common/interfaces/IError";
-import { toast } from 'react-toastify';
-import { IUserInfo } from "../common/interfaces/IUser";
-interface IProps {
-  changeUserInfo: (data: IUserInfo) => void
-}
+import Auth from "../components/Auth/Auth";
+import useInput from "../hooks/useInput";
+import AuthService from "../services/AuthService";
 
-const SignIn: FC<IProps> = ({ changeUserInfo }) => {
-
-  const navigate = useNavigate();
-
+const Login: FC = () => {
+  const navigate = useNavigate()
   const emailInput = useInput('', { isEmpty: true, isEmail: true });
   const passwordInput = useInput('', { isEmpty: true, minLength: 4, maxLength: 30 });
   const [isClosePassword, setIsClosePassword] = useState<boolean>(true);
@@ -36,13 +32,11 @@ const SignIn: FC<IProps> = ({ changeUserInfo }) => {
     if (isRememberMe !== formValue.remember) {
       setFormValue({ ...formValue, remember: isRememberMe })
     }
-  }, [emailInput.value, passwordInput.value, isRememberMe])
+  }, [emailInput.value, passwordInput.value, isRememberMe, formValue])
 
-
-  const onSubmit = async (formData: ILoginReq): Promise<void> => {
+  const onSubmit = useCallback(async (formData: ILoginReq): Promise<void> => {
     try {
       const response = await AuthService.login(formData);
-      changeUserInfo({ id: response.id, firstName: response.firstName });
       localStorage.setItem('access-token', response.accessToken);
       localStorage.setItem('user-id', response.id);
       localStorage.setItem('user-firstName', response.firstName);
@@ -51,7 +45,9 @@ const SignIn: FC<IProps> = ({ changeUserInfo }) => {
       const myError = error as IError;
       toast(myError.message);
     }
-  }
+  }, [])
+
+  const isValidForm = emailInput.isInputValid === true && passwordInput.isInputValid === true
 
   return (
     <Auth>
@@ -76,10 +72,10 @@ const SignIn: FC<IProps> = ({ changeUserInfo }) => {
           <label className="auth__checkbox-label" htmlFor='option__save'>Запомнить меня</label>
         </div>
       </div>
-      <button className="auth__button" type='button' onClick={() => onSubmit(formValue)}>Войди</button>
+      <button disabled={!isValidForm} className="auth__button" type='button' onClick={() => onSubmit(formValue)}>Войди</button>
       <NavLink className="option__forgot" to="../register">У меня еще нет акаунта</NavLink>
     </Auth>
   );
 }
 
-export default SignIn;
+export default Login;

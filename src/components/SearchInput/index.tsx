@@ -1,4 +1,5 @@
-import React, { FC, useState } from 'react';
+/* eslint-disable prettier/prettier */
+import React, { FC } from 'react';
 
 import { TextEnum } from '../../common/enums';
 
@@ -8,9 +9,8 @@ interface IProps {
 }
 
 const SearchInput: FC<IProps> = ({ searchValue, changeSearchValue }) => {
-
   return (
-    <section className='search'>
+    <section className="search">
       <input
         id="searchInput"
         name="search"
@@ -18,10 +18,11 @@ const SearchInput: FC<IProps> = ({ searchValue, changeSearchValue }) => {
         className="search_input"
         placeholder={TextEnum.INPUT_HOLDER}
         value={searchValue}
-        onChange={(e) => changeSearchValue(e.target.value + '')}
-      // pattern="[-a-zA-Zа-яёА-ЯЁ0-9@:%._+~#=]{2,256}\.[a-zа-яё]{2,6}(?:[?/][-a-zA-Zа-яёА-ЯЁ0-9@:%_+.~#?&/=]*)?"
+        onChange={(e) => changeSearchValue(`${e.target.value}`)}
       />
-      <label htmlFor='searchInput' className="search__label" >Поиск</label>
+      <label htmlFor="searchInput" className="search__label">
+        Поиск
+      </label>
     </section>
   );
 };

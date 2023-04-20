@@ -1,9 +1,10 @@
+/* eslint-disable prettier/prettier */
 import { ICard, ICardDto } from "../common/interfaces/ICard"
 import api from "../configs/api";
+import { ResCardDto, ResMessageCardDto } from "./dto/card.dto";
+
 export default class CardService {
-
-
-  static async getCards(): Promise<ICard[]> {
+  public static async getCards(): Promise<ResCardDto[]> {
     const response: Response = await fetch(`${api.baseUrl}cards`, {
       method: "GET",
       headers: {
@@ -13,13 +14,29 @@ export default class CardService {
     })
 
     if (!response.ok) {
-      return Promise.reject(`Ошибка: ${response.status}`);
+      return Promise.reject(response.json());
     }
 
     return response.json();
   }
 
-  static async incrementCard(idCard: string): Promise<{ status: string } | string> {
+  public static async getCardsPagination(limit = 10, page = 1): Promise<Response> {
+    const response: Response = await fetch(`${api.baseUrl}cards?_limit=${limit}&_page=${page}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem('access-token')}`
+      },
+    })
+
+    if (!response.ok) {
+      return Promise.reject(response.json());
+    }
+
+    return response;
+  }
+
+  public static async incrementCard(idCard: string): Promise<ResMessageCardDto> {
     const response = await fetch(`${api.baseUrl}cards/${idCard}/increment`, {
       method: "GET",
       headers: {
@@ -29,13 +46,13 @@ export default class CardService {
     })
 
     if (!response.ok) {
-      return Promise.reject(`Ошибка: ${response.status}`);
+      return Promise.reject(response.json());
     }
 
     return response.json();
   }
 
-  static async decrementCard(idCard: string): Promise<{ status: string } | string> {
+  public static async decrementCard(idCard: string): Promise<ResMessageCardDto> {
     const response = await fetch(`${api.baseUrl}cards/${idCard}/decrement`, {
       method: "GET",
       headers: {
@@ -45,13 +62,13 @@ export default class CardService {
     })
 
     if (!response.ok) {
-      return Promise.reject(`Ошибка: ${response.status}`);
+      return Promise.reject(response.json());
     }
 
     return response.json();
   }
 
-  static async removeCard(idCard: string): Promise<{ message: string } | string> {
+  public static async removeCard(idCard: string): Promise<ResMessageCardDto> {
     const response = await fetch(`${api.baseUrl}cards/${idCard}`, {
       method: "DELETE",
       headers: {
@@ -61,13 +78,13 @@ export default class CardService {
     })
 
     if (!response.ok) {
-      return Promise.reject(`Ошибка: ${response.status}`);
+      return Promise.reject(response.json());
     }
 
     return response.json();
   }
 
-  static async changeCard(card: ICard): Promise<ICard> {
+  public static async changeCard(card: ICard): Promise<ResCardDto> {
     const { id, title, price, dateFrom, dateTo, count } = card;
     const response = await fetch(`${api.baseUrl}cards/${id}`, {
       method: "PUT",
@@ -79,13 +96,13 @@ export default class CardService {
     })
 
     if (!response.ok) {
-      return Promise.reject(`Ошибка: ${response.status}`);
+      return Promise.reject(response.json());
     }
 
     return response.json();
   }
 
-  static async createCard(body: ICardDto): Promise<ICard> {
+  public static async createCard(body: ICardDto): Promise<ResCardDto> {
     const response = await fetch(`${api.baseUrl}cards`, {
       method: "POST",
       headers: {
@@ -96,7 +113,7 @@ export default class CardService {
     })
 
     if (!response.ok) {
-      return Promise.reject(`Ошибка: ${response.status}`);
+      return Promise.reject(response.json());
     }
 
     return response.json();

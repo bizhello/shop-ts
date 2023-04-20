@@ -1,4 +1,5 @@
-import React, { FC, useEffect } from 'react';
+/* eslint-disable prettier/prettier */
+import React, { FC, useMemo } from 'react';
 
 import { TextEnum } from '../../common/enums';
 import { ICard, IChangeCard } from '../../common/interfaces/ICard';
@@ -14,24 +15,31 @@ interface IProps {
   removeCard: (idCard: string) => Promise<void>;
 }
 
-const Card: FC<IProps> = ({ togglePopup, changeValuePopup, card, incrementCard, decrementCard, removeCard }) => {
-  const {
-    id,
-    title,
-    price,
-    dateFrom,
-    dateTo,
-    count } = card
+const Card: FC<IProps> = ({
+  togglePopup,
+  changeValuePopup,
+  card,
+  incrementCard,
+  decrementCard,
+  removeCard,
+}) => {
+  const { id, title, price, dateFrom, dateTo, count } = card;
 
-  const OnChangeCard = () => {
+  const onChangeCard = () => {
     changeValuePopup({
-      ...card
-    })
-    togglePopup()
+      ...card,
+    });
+    togglePopup();
   };
 
+  const isDateValid = useMemo(() => {
+    const difference = dateTo.getTime() - Date.now();
+
+    return !(difference < 550383924);
+  }, [dateTo]);
+
   return (
-    <article className="card">
+    <article className={isDateValid ? 'card' : 'card card-isError'}>
       <img
         className="card__image"
         src={`http://localhost:5555/static/images/${id}/image.webp`}
@@ -49,22 +57,34 @@ const Card: FC<IProps> = ({ togglePopup, changeValuePopup, card, incrementCard, 
       </div>
       <div className="card__group">
         <h4 className="card__description">{TextEnum.EXPIRATION_DATE}</h4>
-        <p className="card__value">{dateReverse(parseDateInString(dateFrom))} - {dateReverse(parseDateInString(dateTo))}</p>
+        <p className="card__value">
+          {dateReverse(parseDateInString(dateFrom))} -{' '}
+          {dateReverse(parseDateInString(dateTo))}
+        </p>
       </div>
       <div className="card__group">
         <h4 className="card__description">{TextEnum.COUNT}</h4>
         <p className="card__value">{count} шт</p>
       </div>
       <div className="card__group">
-        <button className="card__control card__control-plus" onClick={() => incrementCard(id)} />
-        <button className="card__control card__control-minus" onClick={() => decrementCard(id)} />
+        <button
+          className="card__control card__control-plus"
+          onClick={() => incrementCard(id)}
+        />
+        <button
+          className="card__control card__control-minus"
+          onClick={() => decrementCard(id)}
+        />
       </div>
       <div className="card__group">
         <button
           className="card__control card__control-change"
-          onClick={() => OnChangeCard()}
+          onClick={() => onChangeCard()}
         />
-        <button className="card__control card__control-delete" onClick={() => removeCard(id)} />
+        <button
+          className="card__control card__control-delete"
+          onClick={() => removeCard(id)}
+        />
       </div>
     </article>
   );

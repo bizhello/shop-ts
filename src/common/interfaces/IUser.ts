@@ -2,7 +2,7 @@ interface IChangeUser {
   readonly email?: string;
   readonly firstName?: string;
   readonly lastName?: string;
-  readonly password?: string
+  readonly password?: string;
 }
 
 interface IUser {
@@ -10,7 +10,7 @@ interface IUser {
   readonly email: string;
   readonly firstName: string;
   readonly lastName: string;
-  readonly password: string
+  readonly password: string;
 }
 
 interface IUserInfo {

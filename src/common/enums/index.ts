@@ -17,7 +17,6 @@ enum TextEnum {
   SORT_BY = 'Сортировать по',
 }
 
-
 enum SortEnum {
   dataCreatedAt = 'По дате создания',
   dataEnd = 'По дате окончания срока годностии',
@@ -54,4 +53,4 @@ enum PathEnum {
   SIGN_IN = '/shop-family/sign-in',
 }
 
-export { MessagesEnum, PathEnum, TextEnum, TextPopupEnum, SortEnum };
+export { MessagesEnum, PathEnum, SortEnum, TextEnum, TextPopupEnum };

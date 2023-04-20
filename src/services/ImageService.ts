@@ -1,18 +1,20 @@
+/* eslint-disable prettier/prettier */
 import api from "../configs/api";
+import { ResCreateImageDto, ResRemoveImageDto } from "./dto/image.dto";
 
 export default class ImageService {
   public static async createImageCard(
     idCard: string,
     formData: FormData,
-  ): Promise<{ url: string; idCard: string }> {
+  ): Promise<ResCreateImageDto> {
     const response = await fetch(`${api.baseUrl}images/${idCard}`, {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
       // mode: "cors", // no-cors, *cors, same-origin
       // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
       // credentials: "same-origin", // include, *same-origin, omit
       headers: {
-        //"Content-type": "multipart/form-data", // application/json
         "Authorization": `Bearer ${localStorage.getItem('access-token')}`
+        // "Content-type": "multipart/form-data", // application/json
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: formData,
@@ -22,14 +24,14 @@ export default class ImageService {
     });
 
     if (!response.ok) {
-      return Promise.reject(`Ошибка: ${response.status}`);
+      return Promise.reject(response.json());
       // throw new Error(`Ошибка: ${response.status}`);
     }
 
     return response.json();
   }
 
-  static async removeCardImage(idCard: string): Promise<{ cardId: string } | string> {
+  public static async removeCardImage(idCard: string): Promise<ResRemoveImageDto> {
     const response = await fetch(`${api.baseUrl}images/${idCard}`, {
       method: "DELETE",
       headers: {
@@ -39,7 +41,7 @@ export default class ImageService {
     })
 
     if (!response.ok) {
-      return Promise.reject(`Ошибка: ${response.status}`);
+      return Promise.reject(response.json());
     }
 
     return response.json();

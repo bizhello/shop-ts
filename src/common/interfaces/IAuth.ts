@@ -26,4 +26,4 @@ interface ILoginRes {
   readonly accessToken: string;
 }
 
-export type { IRegistryReq, IRegistryRes, ILoginReq, ILoginRes }
+export type { ILoginReq, ILoginRes, IRegistryReq, IRegistryRes };

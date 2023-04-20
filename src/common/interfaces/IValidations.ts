@@ -5,4 +5,4 @@ interface IValidations {
   isEmail?: boolean;
 }
 
-export default IValidations
+export default IValidations;

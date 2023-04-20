@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable prettier/prettier */
+import React, { FC, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import useInput from "../hooks/useInput";
-import Auth from "../components/Auth/Auth";
-import { IRegistryReq } from "../common/interfaces/IAuth";
-import AuthService from "../services/AuthService";
 import { toast } from 'react-toastify';
-import IError from "../common/interfaces/IError";
 
-const SignUp = () => {
+import { IRegistryReq } from "../common/interfaces/IAuth";
+import IError from "../common/interfaces/IError";
+import Auth from "../components/Auth/Auth";
+import useInput from "../hooks/useInput";
+import AuthService from "../services/AuthService";
+
+const Register: FC = () => {
 
   const navigate = useNavigate();
 
@@ -38,7 +40,7 @@ const SignUp = () => {
     if (lastName.value !== formValue.lastName) {
       setFormValue({ ...formValue, lastName: lastName.value })
     }
-  }, [emailInput.value, passwordInput.value, firstName.value, lastName.value])
+  }, [emailInput.value, passwordInput.value, firstName.value, lastName.value, formValue])
 
   const onSubmit = async (formData: IRegistryReq): Promise<void> => {
     try {
@@ -49,6 +51,7 @@ const SignUp = () => {
       toast(myError.message);
     }
   }
+  const isValidForm = emailInput.isInputValid === true && passwordInput.isInputValid === true && firstName.isInputValid === true && lastName.isInputValid === true
 
   return (
     <Auth>
@@ -79,11 +82,10 @@ const SignUp = () => {
           <label className="auth__checkbox-label" htmlFor='option__open'>Показать пароль</label>
         </div>
       </div>
-      <button type='button' className="auth__button" onClick={() => onSubmit(formValue)}>Зарегистрироваться</button>
+      <button disabled={!isValidForm} type='button' className="auth__button" onClick={() => onSubmit(formValue)}>Зарегистрироваться</button>
       <NavLink className="option__forgot" to="../login">У меня уже есть акаунт</NavLink>
-      {/* <ToastContainer /> */}
     </Auth>
   );
 }
 
-export default SignUp;
+export default Register;

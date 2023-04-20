@@ -1,13 +1,32 @@
-import { useState, useEffect, useMemo } from "react";
+/* eslint-disable no-loops/no-loops */
+
+/* eslint-disable no-restricted-syntax */
+
+/* eslint-disable guard-for-in */
+
+/* eslint-disable no-unused-expressions */
+
+/* eslint-disable no-case-declarations */
+
+/* eslint-disable prettier/prettier */
+import { useEffect, useMemo, useState } from "react";
+
 import IValidations from "../common/interfaces/IValidations";
 
-const useValidation = (value: string, validations: IValidations) => {
+interface IUseValidation {
+  errorArray: string[];
+  isInputValid: boolean;
+}
+
+export type { IUseValidation }
+
+const useValidation = (value: string, validations: IValidations): IUseValidation => {
 
   const [isEmpty, setEmpty] = useState<boolean>(true);
   const [isMinLengthError, setMinLengthError] = useState<boolean>(false);
   const [isMaxLengthError, setMaxLengthError] = useState<boolean>(false);
   const [isEmailError, setEmailError] = useState<boolean>(false);
-  const [inputValid, setInputValid] = useState<boolean>(false);
+  const [isInputValid, setInputValid] = useState<boolean>(false);
 
   const errorArray: string[] = useMemo(() => {
     const array = []
@@ -25,7 +44,7 @@ const useValidation = (value: string, validations: IValidations) => {
     }
 
     return array;
-  }, [isEmpty, isMinLengthError, isMaxLengthError, isEmailError])
+  }, [isEmpty, isMinLengthError, isMaxLengthError, isEmailError, validations.minLength, validations.maxLength])
 
   useEffect(() => {
     if (value) {
@@ -58,7 +77,7 @@ const useValidation = (value: string, validations: IValidations) => {
       setEmpty(true);
     }
 
-  }, [value])
+  }, [validations, value])
 
   useEffect(() => {
     if (isEmpty || isMinLengthError || isMaxLengthError || isEmailError) {
@@ -70,7 +89,7 @@ const useValidation = (value: string, validations: IValidations) => {
 
   return {
     errorArray,
-    inputValid,
+    isInputValid,
   }
 }
 

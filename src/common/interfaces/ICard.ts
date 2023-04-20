@@ -19,4 +19,4 @@ interface IChangeCard {
   count?: number | null;
 }
 
-export type { ICard, IChangeCard, ICardDto };
+export type { ICard, ICardDto, IChangeCard };

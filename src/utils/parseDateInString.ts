@@ -1,9 +1,12 @@
-const parseDateInString = (arg: Date | null | undefined): string => {
+type TArg = Date | null | undefined;
+
+const parseDateInString = (arg: TArg): string => {
   if (!arg) {
-    return ''
+    return '';
   }
   const date = new Date(arg);
-  const textMonth = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+  const textMonth =
+    date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
   const texDay = date.getDate() > 10 ? date.getDate() : `0${date.getDate()}`;
 
   return `${date.getFullYear()}-${textMonth}-${texDay}`;
